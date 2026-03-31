@@ -1,0 +1,11 @@
+name: "Fines_Serial"
+version: "0.1.0"
+description: "Serial port communication driver"
+maintainers:
+  - name: "fins"
+    email: "fins@sjtu.edu.cn"
+depends:
+  geometry_msgs: "system"
+  std_msgs: "system"
+licenses:
+  - "MIT"
