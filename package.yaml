@@ -6,5 +6,6 @@ maintainers:
     email: "fins@sjtu.edu.cn"
 depends:
   geometry_msgs: "system"
+  fmt: "9.1.0"
 licenses:
   - "MIT"
