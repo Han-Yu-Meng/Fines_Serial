@@ -18,8 +18,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 fins_link_ros_dependencies(${PROJECT_NAME}
   geometry_msgs
-  nav_msgs
-  pcl_conversions
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
