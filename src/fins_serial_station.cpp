@@ -29,7 +29,7 @@ public:
     void define() override {
         set_name("SerialStationNode");
         set_description("Migration of Fines_Serial to FINS framework.");
-        set_category("Navigation>Communication");
+        set_category("Driver");
 
         // FINS Input: Subscribe to /cmd_vel
         register_input<0, geometry_msgs::msg::Twist>("cmd_vel", &SerialStationNode::on_cmd_vel);
