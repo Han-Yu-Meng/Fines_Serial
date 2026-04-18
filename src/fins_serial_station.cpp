@@ -27,14 +27,12 @@ struct SerialConfig {
 class SerialStationNode : public fins::Node {
 public:
     void define() override {
-        set_name("SerialStationNode");
-        set_description("Migration of Fines_Serial to FINS framework.");
+        set_name("SerialStation");
+        set_description("Communicating with FINS Chassis via Serial Port");
         set_category("Driver");
 
-        // FINS Input: Subscribe to /cmd_vel
-        register_input<0, geometry_msgs::msg::Twist>("cmd_vel", &SerialStationNode::on_cmd_vel);
+        register_input<geometry_msgs::msg::Twist>("cmd_vel", &SerialStationNode::on_cmd_vel);
 
-        // Parameters
         register_parameter<std::string>("port", &SerialStationNode::on_port_changed, "/dev/ttyUSB0");
         register_parameter<int>("baudrate", &SerialStationNode::on_baudrate_changed, 921600);
     }
@@ -119,22 +117,18 @@ private:
         if (rx_thread_.joinable()) rx_thread_.join();
     }
 
-    // FINS Callback for cmd_vel
-    void on_cmd_vel(const fins::Msg<geometry_msgs::msg::Twist> &msg) {
+    void on_cmd_vel(const geometry_msgs::msg::Twist &msg) {
         std::vector<uint8_t> data;
         
-        // Use convert_float2bytes from utils/data_convert.hpp
-        convert_float2bytes(data, msg->linear.x);
-        convert_float2bytes(data, msg->linear.y);
-        convert_float2bytes(data, msg->linear.z);
-        convert_float2bytes(data, msg->angular.x);
-        convert_float2bytes(data, msg->angular.y);
-        convert_float2bytes(data, msg->angular.z);
+        convert_float2bytes(data, msg.linear.x);
+        convert_float2bytes(data, msg.linear.y);
+        convert_float2bytes(data, msg.linear.z);
+        convert_float2bytes(data, msg.angular.x);
+        convert_float2bytes(data, msg.angular.y);
+        convert_float2bytes(data, msg.angular.z);
 
-        // Encode frame
         encode_frame(data, (uint8_t)CMD_VEL);
         
-        // Push to TX queue
         {
             std::lock_guard<std::mutex> lock(tx_mutex_);
             tx_queue_.push(std::move(data));
@@ -199,7 +193,6 @@ private:
             }
 
             if (bytes_read > 0) {
-                // Mimic original decode(): log hex received
                 std::string hex_str;
                 for (size_t i = 0; i < bytes_read; ++i) {
                     hex_str += fmt::format("{:02X} ", rx_buffer[i]);
