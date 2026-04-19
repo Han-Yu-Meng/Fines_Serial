@@ -218,4 +218,4 @@ private:
 };
 
 EXPORT_NODE(SerialStationNode)
-DEFINE_PLUGIN_ENTRY()
+DEFINE_PLUGIN_ENTRY(fins::STATELESS)
